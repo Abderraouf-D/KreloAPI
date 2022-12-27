@@ -1,19 +1,31 @@
-from typing import Optional,List
-#€
-from fastapi import FastAPI,Response,status,HTTPException,Depends
 
+Conversation ouverte. 1 message non lu.
+
+Aller au contenu
+Utiliser Messagerie Ecole nationale supérieure d'informatique avec un lecteur d'écran
+Impossible de se connecter à Chat. En savoir plus
+1 sur 4 306
+BATATA V2
+Boîte de réception
+SAMY GHEBACHE
+	
+Pièces jointes19:14 (il y a 44 minutes)
+	
+À moi
+
+ 1 pièce jointe  • Analyse effectuée par Gmail
+	
+
+from typing import Optional,List
+from fastapi import FastAPI,Response,status,HTTPException,Depends
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
 from sqlalchemy.orm import Session
 import models,schemas
 from database import engine,get_db,Base
-
 app=FastAPI()
-
 Base.metadata.create_all(bind=engine)
-
-
 """"
 @app.get('/results/{name}',status_code=status.HTTP_202_ACCEPTED)
 def result(name:str):
@@ -47,23 +59,63 @@ def del_posts(id:int,db: Session=Depends(get_db)):
 def upd_posts(post:schemas.Post,id:int,db: Session=Depends(get_db)):
     db.query(models.Post).filter(models.Post.id==id).update(post.dict(),synchronize_session=False)
     db.commit()"""
-
-
+    
+#Créer Utilisateur
 
 @app.post('/create_user')
 def create_user(user:schemas.UtilisateurBase,db: Session=Depends(get_db)):
     #Check if the user exist or no
     new_user=db.query(models.Utilisateur).filter(models.Utilisateur.email==user.email).first()
-    print(new_user)
+    if(new_user!=None):#User already exists
+        return new_user
     new_user=models.Utilisateur(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
+#Créer Annonce
+
+@app.post('/create_annonce')
+def create_annonce(annonce:schemas.AnnonceBase,db: Session=Depends(get_db)):
+    #check if the user exist or no
+    user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
+    if(user==None):#User doesn't exist
+        return None
+    new_annonce=models.Annonce(**annonce.dict())
+    db.add(new_annonce)
+    db.commit()
+    db.refresh(new_annonce)
+    return new_annonce
+
+@app.get('/get_annonce')
+def get_annonce(id_utilisateur:int,db: Session=Depends(get_db)):
+    user=db.query(models.Utilisateur).filter(models.Utilisateur.id==id_utilisateur).first()
+    if(user==None):
+        return None
+    annonce=db.query(models.Annonce).filter(models.Annonce.utilisateur_id==id_utilisateur).all()
+    return annonce
+
+@app.get('/get_message')
+def get_message(id_utilisateur:int,db:Session=Depends(get_db)):
+    annonce_table=get_annonce(id_utilisateur=id_utilisateur,db=db)#to get all annonces
+    message=[]
+    print(annonce_table)
+    if(annonce_table==None or len(annonce_table)==0):
+        return annonce_table
+    for annonce in annonce_table:
+        message.append(db.query(models.Messages).filter(models.Messages.annonce_id==annonce.id).all())
+    return message
 
 
 
-@app.get('get_user')
-def get_user(user:schemas.UtilisateurBase,db: Session=Depends(get_db)):
-    user=db.query(models.Utilisateur).filter(models.Utilisateur.id==id).first()
+
+
+    
+    
+
+    
+    
+
+main.py
+Affichage de main.py en cours...
