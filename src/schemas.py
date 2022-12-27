@@ -11,7 +11,7 @@ class AnnonceBase(BaseModel):
     wilaya: int
     commune: str
     adresse: str
-    photo: str
+    photos: str
     datePub: str
     class Config:
         orm_mode = True

@@ -29,12 +29,6 @@ class Annonce(Base):
     photos = Column(Text, nullable=False)
     datePub = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-class Favoris(Base):
-    __tablename__ = "AnnoncesFav_Utilisateurs"
-    id = Column(Integer, primary_key=True)
-    annonce_id = Column(Integer, ForeignKey("Annonces.id"))
-    utilisateur_id = Column(Integer, ForeignKey("Utilisateurs.id"))
-
 class Messages(Base):
     __tablename__ = "Messages"
     id = Column(Integer, primary_key=True)
