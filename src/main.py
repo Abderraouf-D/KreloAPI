@@ -98,6 +98,3 @@ def get_message(id_utilisateur:int,db:Session=Depends(get_db)):
 
     
     
-
-main.py
-Affichage de main.py en cours...
