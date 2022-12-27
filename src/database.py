@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 user = "root"
 passwd = "rootpasswd"
 host = "localhost"
-port = "kreloDB"
+port = "3306"
 dbname = "kreloDB"
 
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{user}:{passwd}@{host}:{port}/{dbname}"
