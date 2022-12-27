@@ -1,21 +1,3 @@
-
-Conversation ouverte. 1 message non lu.
-
-Aller au contenu
-Utiliser Messagerie Ecole nationale supérieure d'informatique avec un lecteur d'écran
-Impossible de se connecter à Chat. En savoir plus
-1 sur 4 306
-BATATA V2
-Boîte de réception
-SAMY GHEBACHE
-	
-Pièces jointes19:14 (il y a 44 minutes)
-	
-À moi
-
- 1 pièce jointe  • Analyse effectuée par Gmail
-	
-
 from typing import Optional,List
 from fastapi import FastAPI,Response,status,HTTPException,Depends
 from fastapi.params import Body
