@@ -32,4 +32,3 @@ class UtilisateurBase(BaseModel):
 
 class MessageBase(BaseModel):
     body: str
-    dateEnvoi: str
