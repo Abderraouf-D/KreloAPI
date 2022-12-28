@@ -90,6 +90,7 @@ def get_message(id_utilisateur:int,db:Session=Depends(get_db)):
         if(msg!=None and len(msg)>0):
             message.append(msg)
     return message
+#for github
 
 
 

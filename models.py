@@ -36,3 +36,4 @@ class Messages(Base):
     utilisateur_id = Column(Integer, ForeignKey("Utilisateurs.id"))
     body = Column(Text, nullable=False)
     dateEnvoi = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+#for github
