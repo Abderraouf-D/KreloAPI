@@ -1,11 +1,13 @@
 from typing import Optional,List
-from fastapi import FastAPI,Response,status,HTTPException,Depends
+from fastapi import FastAPI,Response,status,HTTPException,Depends ,Path
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session 
+from sqlalchemy import or_
 import models,schemas
 from database import engine,get_db,Base
+import string
 app=FastAPI()
 Base.metadata.create_all(bind=engine)
 """"
@@ -109,9 +111,34 @@ def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.Mes
     
 #ToDo 
 
-#Rechercher annonce 
+#Rechercher annonce selon les mots clés 
+@app.get('/get_Annonces_ByKeywords' )
+def get_Annonces_ByKeywords( keyWords  :str  , db : Session = Depends(get_db)): 
+    wordList = set (   keyWords.lower().split(' '))
+    annonces = db.query(models.Annonce).all() 
+    result =[]
+
+    for an in annonces :  
+        if len(wordList & set (  an.titre.lower().split(' ')+an.description.lower().split(' ') ))>0  : 
+            result.append(an)
+    if  (len(result)> 0) : 
+        return result 
+    else :
+        return None  
+
+
+    
 
 #Supprimer annonce 
+@app.delete('/delete_annonce/{annonce_id}')
+def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
+    if ( db.delete(annonce_id)> 0 ) :
+        db.commit()
+        return {"succes" : True}
+    else : 
+        return {"succes" : False}
+
+    
 
 #Web scraping 
     
