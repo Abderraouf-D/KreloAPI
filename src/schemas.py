@@ -12,7 +12,6 @@ class AnnonceBase(BaseModel):
     commune: str
     adresse: str
     photos: str
-    datePub: str
     class Config:
         orm_mode = True
 

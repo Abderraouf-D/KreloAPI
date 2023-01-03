@@ -1,7 +1,8 @@
 from database import Base
 from sqlalchemy import Column,Integer,String,Boolean,Text,ForeignKey,DECIMAL
 from sqlalchemy.sql.expression import text
-from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.sql.sqltypes import Date
+import datetime
 class Utilisateur(Base):
     __tablename__ = "Utilisateurs"
     id = Column(Integer, primary_key=True)
@@ -27,7 +28,7 @@ class Annonce(Base):
     commune = Column(String(30), nullable=False)
     adresse = Column(String(30), nullable=False)
     photos = Column(Text, nullable=False)
-    datePub = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    datePub = Column(Date, default=datetime.date.today())
 
 class Messages(Base):
     __tablename__ = "Messages"
@@ -35,4 +36,6 @@ class Messages(Base):
     annonce_id = Column(Integer, ForeignKey("Annonces.id"))
     utilisateur_id = Column(Integer, ForeignKey("Utilisateurs.id"))
     body = Column(Text, nullable=False)
-    dateEnvoi = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    dateEnvoi = Column(Date, default=datetime.date.today())
+
+
