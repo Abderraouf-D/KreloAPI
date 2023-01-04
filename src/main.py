@@ -9,7 +9,7 @@ import models,schemas
 from database import engine,get_db,Base
 import string
 from datetime import datetime
-
+import re 
 
 
 app=FastAPI()
@@ -102,7 +102,7 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
 
 
 
-#Filterer les annonces   !!!!  NOT COMPLETED !!!
+#Filterer les annonces   
 @app.get('/filter_annonces') 
 def filter_annonces(*,  type: Optional[int] =None,
                         wilaya: Optional[int]= None,
@@ -111,40 +111,60 @@ def filter_annonces(*,  type: Optional[int] =None,
                         dateMaxs : Optional[str]=None,db :  Session = Depends(get_db)) :
     dateMin = dateMax = None 
  
-    if ( dateMins is not None ) : dateMin = datetime.strptime(dateMins,"%Y-%m-%d").date()
-    if ( dateMaxs is not None ) : dateMax = datetime.strptime(dateMaxs,"%Y-%m-%d").date()
+    if ( dateMins is not None ) : 
+        if (not re.match("^\d{4}-\d{2}-\d{2}$", dateMins) ) :
+            raise HTTPException(500 , "Please enter the date in the following form : yyyy-mm-dd")
+        dateMin = datetime.strptime(dateMins,"%Y-%m-%d").date()
+    if ( dateMaxs is not None ) : 
+        if ( not re.match("^\d{4}-\d{2}-\d{2}$", dateMaxs) ) : 
+            raise HTTPException(500 , "Please enter the date in the following form : yyyy-mm-dd")
+        dateMax = datetime.strptime(dateMaxs,"%Y-%m-%d").date()
    
-    
+    queryRes= None
     params = locals().copy() 
     result=[]
     minLength=0
    
-    for attr in [x for x in params if(params[x] is not None) ][0:3]: # avoir l union des annonce qui contiennent ces  valeurs
-    
-        if ( dateMin == None and dateMax ==  None) : 
-            queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr]).all() 
-        elif ( dateMin == None )  : 
-            queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], models.Annonce.datePub >= dateMin).all() 
-        elif ( dateMax == None )  : 
-            queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], models.Annonce.datePub <= dateMax).all() 
-        else :  
-            queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
-        
-        if (queryRes == None ) : 
-            raise HTTPException(status_code=406, detail="items not found")
-        
-        
-        result.append(set(queryRes))     
-        if (len(result[minLength]) > len(queryRes)) : minLength = len(result)-1
+    for attr in [x for x in params][0:3]: # avoir l union des annonce qui contiennent ces  valeurs
+        if ( params[attr] is not None): 
+            if ( dateMin == None and dateMax ==  None) : 
+                queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr]).all() 
+            elif ( dateMin == None )  : 
+                queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], models.Annonce.datePub >= dateMin).all() 
+            elif ( dateMax == None )  : 
+                queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], models.Annonce.datePub <= dateMax).all() 
+            else :  
+                queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
+            
+            if (queryRes == None or len(queryRes)==0) :  
+                raise HTTPException(status_code=406, detail="items not found")
+               
+            
+            result.append(set(queryRes))     
+            if (len(result[minLength]) > len(queryRes)) : minLength = len(result)-1
                    
      #result contient plusieurs sets chaque set  contient les annonces qui ont un certain attribut 
      #on doit faire l'intersection de tous ces sets pour avoir notre resultat 
-     
-    filtered = result[minLength]
-    for an in result : 
-        filtered = filtered & an 
-        if(len(filtered) == 0 ) :
-            raise HTTPException(status_code=405, detail="items not found")
+    if( len(result)>0) : 
+        filtered = result[minLength]
+        for an in result : 
+            filtered = filtered & an 
+            if(len(filtered) == 0 ) :
+                raise HTTPException(status_code=405, detail="items not found")
+    else : 
+        if ( dateMin == None and dateMax ==  None) : 
+            queryRes = None
+        elif ( dateMin == None )  : 
+                queryRes = db.query(models.Annonce).filter(models.Annonce.datePub >= dateMin).all() 
+        elif ( dateMax == None )  : 
+                queryRes = db.query(models.Annonce).filter(models.Annonce.datePub <= dateMax).all() 
+        else :  
+                print("here")
+                queryRes = db.query(models.Annonce).filter(dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
+        if (queryRes == None or len(queryRes)==0) : 
+            raise HTTPException(status_code=406, detail="items not found")
+            print("HRERRRRRR")
+        filtered = set(queryRes)    
             
     return filtered
 
