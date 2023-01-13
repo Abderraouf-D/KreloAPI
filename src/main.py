@@ -10,9 +10,21 @@ from database import engine,get_db,Base
 import string
 from datetime import datetime
 import re 
+from fastapi.middleware.cors import CORSMiddleware
 
-
+#enabling CORS 
 app=FastAPI()
+
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 Base.metadata.create_all(bind=engine)
 
 
