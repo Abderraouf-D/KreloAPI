@@ -12,8 +12,10 @@ from datetime import datetime
 import re 
 from fastapi.middleware.cors import CORSMiddleware
 
-#enabling CORS 
 app=FastAPI()
+
+
+#enabling CORS 
 
 origins = ["*"]
 app.add_middleware(
@@ -171,11 +173,9 @@ def filter_annonces(*,  type: Optional[int] =None,
         elif ( dateMax == None )  : 
                 queryRes = db.query(models.Annonce).filter(models.Annonce.datePub <= dateMax).all() 
         else :  
-                print("here")
                 queryRes = db.query(models.Annonce).filter(dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
         if (queryRes == None or len(queryRes)==0) : 
             raise HTTPException(status_code=406, detail="items not found")
-            print("HRERRRRRR")
         filtered = set(queryRes)    
             
     return filtered
