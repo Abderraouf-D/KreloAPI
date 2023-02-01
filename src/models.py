@@ -12,7 +12,6 @@ class Utilisateur(Base):
     prenom = Column(String(30), nullable=False)
     tel = Column(String(30), nullable=False)
     adresse = Column(Text, nullable=False)
-    token = Column(Text, nullable=False)
 
 class Annonce(Base):
     __tablename__ = "Annonces"
@@ -29,6 +28,8 @@ class Annonce(Base):
     adresse = Column(String(30), nullable=False)
     photos = Column(Text, nullable=False)
     datePub = Column(Date, default=datetime.date.today())
+    isScraped = False
+
 
 class Messages(Base):
     __tablename__ = "Messages"

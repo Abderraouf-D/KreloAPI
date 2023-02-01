@@ -37,7 +37,7 @@ Base.metadata.create_all(bind=engine)
 
 @app.post('/create_user')
 def create_user(user:schemas.UtilisateurBase,db: Session=Depends(get_db)):
-    #Check if the user exist or no
+    #Check if the user exists or not
     new_user=db.query(models.Utilisateur).filter(models.Utilisateur.email==user.email).first()
     if(new_user):#User already exists
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -50,7 +50,7 @@ def create_user(user:schemas.UtilisateurBase,db: Session=Depends(get_db)):
 #Récuperer utilisateur 
 @app.get('/get_user')
 def get_user(email:str,db: Session=Depends(get_db)):
-    #Check if the user exist or no
+    #Check if the user exists or no
     new_user=db.query(models.Utilisateur).filter(models.Utilisateur.email==email).first()
     if(new_user is None):#not found
         raise HTTPException(status_code=404, detail="User not found")
@@ -61,7 +61,7 @@ def get_user(email:str,db: Session=Depends(get_db)):
 
 @app.post('/create_annonce')
 def create_annonce(annonce:schemas.AnnonceBase,db: Session=Depends(get_db)):
-    #check if the  exist or no
+    #check if it exists or no
     user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
     if(user==None):#User doesn't exist
         raise HTTPException(status_code=404, detail="User not found")
@@ -85,7 +85,22 @@ def get_mesAnnonces(id_utilisateur:int,db: Session=Depends(get_db)):
 
     
     
- 
+ #retourner toutes les annonces  
+@app.get('/get_Annonces_all' )
+def get_Annonces_ByKeywords( db : Session = Depends(get_db)): 
+    annonces = db.query(models.Annonce).all() 
+    if ( annonces == None) :
+        raise HTTPException(status_code=405, detail="items not found")
+    return annonces
+
+#Rechercher annonce par id  
+@app.get('/get_Annonce_byid' )
+def get_Annonce_ByKeywords( id : int , db : Session = Depends(get_db)): 
+    annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
+    if ( annonce == None) :
+        raise HTTPException(status_code=405, detail="items not found")
+    return annonce
+
 
 #Rechercher annonce selon les mots clés 
 @app.get('/get_Annonces_ByKeywords' )
@@ -139,7 +154,7 @@ def filter_annonces(*,  type: Optional[int] =None,
     result=[]
     minLength=0
    
-    for attr in [x for x in params][0:3]: # avoir l union des annonce qui contiennent ces  valeurs
+    for attr in [x for x in params][0:3]: # avoir l union des annonces qui contiennent ces  valeurs
         if ( params[attr] is not None): 
             if ( dateMin == None and dateMax ==  None) : 
                 queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr]).all() 
@@ -211,5 +226,7 @@ def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.Mes
     return new_message
 
 #Web scraping 
-    
+
+
+
     

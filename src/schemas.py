@@ -12,6 +12,7 @@ class AnnonceBase(BaseModel):
     commune: str
     adresse: str
     photos: str
+    isScraped = False
     class Config:
         orm_mode = True
 
@@ -23,7 +24,6 @@ class UtilisateurBase(BaseModel):
     prenom: str
     tel: str
     adresse: str
-    token: str
 
     class Config:
         orm_mode = True
