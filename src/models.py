@@ -28,7 +28,7 @@ class Annonce(Base):
     adresse = Column(String(30), nullable=False)
     photos = Column(Text, nullable=False)
     datePub = Column(Date, default=datetime.date.today())
-    isScraped = False
+    isScraped = Column(Boolean, default=False)
 
 
 class Messages(Base):
