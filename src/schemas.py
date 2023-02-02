@@ -1,5 +1,6 @@
 import datetime
-from pydantic import BaseModel
+
+from pydantic import BaseModel 
 class AnnonceBase(BaseModel):
     utilisateur_id: int
     titre: str
@@ -12,9 +13,10 @@ class AnnonceBase(BaseModel):
     commune: str
     adresse: str
     photos: str
-    isScraped = False
+    isScraped : bool
     class Config:
         orm_mode = True
+
 
 
 class UtilisateurBase(BaseModel):
@@ -31,3 +33,5 @@ class UtilisateurBase(BaseModel):
 
 class MessageBase(BaseModel):
     body: str
+    class Config:
+        orm_mode = True
