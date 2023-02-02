@@ -58,11 +58,10 @@ def get_user(email:str,db: Session=Depends(get_db)):
     return new_user
 
 
-#Créer AnnonceS
-#Créer Annonce
 
+#Créer annonce 
 @app.post('/create_annonce')
-def create_annonce(annonce:schemas.AnnonceBase,db: Session=Depends(get_db)):
+async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_db)):
     #check if it exists or no
     user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
     if(user==None):#User doesn't exist
@@ -73,6 +72,26 @@ def create_annonce(annonce:schemas.AnnonceBase,db: Session=Depends(get_db)):
     db.refresh(new_annonce)
     return new_annonce
 
+
+
+#Uploader  les images d'une annonce by id
+@app.post('/upload_byid')
+async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),db: Session=Depends(get_db)):
+    #TODO  : Validate file type 
+    annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
+    if ( annonce == None) :
+        raise HTTPException(status_code=405, detail="items not found")
+    
+    for i , file in enumerate(files) :  
+        tmp = file.filename.split(".")
+        file.filename = f"{id}_{i}.{tmp[1]}"
+        file_path = os.path.join("uploads", file.filename)
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+    annonce.photos = ';'.join([f.filename for f in files])
+    db.commit()
+
+    return {"succes" : True}
 
 #Récuperer les anonnces postés
 @app.get('/get_mesAnnonces')
@@ -129,10 +148,12 @@ def get_Annonces_ByKeywords( keyWords  :str  , db : Session = Depends(get_db)):
 #Supprimer annonce 
 @app.delete('/delete_annonce/{annonce_id}')
 def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
-    if ( db.delete(annonce_id)> 0 ) :
-        db.commit()
-    else : 
-        raise HTTPException(status_code=405, detail="Error when deleting item")
+     annonce=db.query(models.Annonce).filter(models.Annonce.id==annonce_id).first()
+     if(annonce!=None):
+         db.delete(annonce)
+         db.commit()
+     else:
+         raise HTTPException(status_code=405, detail="items not found")
 
 
 
