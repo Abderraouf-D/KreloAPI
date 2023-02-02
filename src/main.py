@@ -1,5 +1,6 @@
+import os
 from typing import Optional,List
-from fastapi import FastAPI,Response,status,Depends ,Path , HTTPException
+from fastapi import FastAPI,Response,status,Depends ,Path , HTTPException , UploadFile , File
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
@@ -57,6 +58,7 @@ def get_user(email:str,db: Session=Depends(get_db)):
     return new_user
 
 
+#Créer AnnonceS
 #Créer Annonce
 
 @app.post('/create_annonce')
@@ -70,6 +72,7 @@ def create_annonce(annonce:schemas.AnnonceBase,db: Session=Depends(get_db)):
     db.commit()
     db.refresh(new_annonce)
     return new_annonce
+
 
 #Récuperer les anonnces postés
 @app.get('/get_mesAnnonces')
@@ -87,15 +90,18 @@ def get_mesAnnonces(id_utilisateur:int,db: Session=Depends(get_db)):
     
  #retourner toutes les annonces  
 @app.get('/get_Annonces_all' )
-def get_Annonces_ByKeywords( db : Session = Depends(get_db)): 
+def get_Annonces_all( db : Session = Depends(get_db)): 
     annonces = db.query(models.Annonce).all() 
     if ( annonces == None) :
         raise HTTPException(status_code=405, detail="items not found")
+    result=[]
+    for an in annonces : 
+        result.append({'title' : an.titre , 'prix':an.prix , 'wilaya' : an.wilaya , 'thumbnail':None})
     return annonces
 
 #Rechercher annonce par id  
 @app.get('/get_Annonce_byid' )
-def get_Annonce_ByKeywords( id : int , db : Session = Depends(get_db)): 
+def get_get_Annonce_byid( id : int , db : Session = Depends(get_db)): 
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
         raise HTTPException(status_code=405, detail="items not found")
