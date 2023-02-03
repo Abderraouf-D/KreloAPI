@@ -75,10 +75,14 @@ async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_d
 @app.post('/upload_byid')
 async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),db: Session=Depends(get_db)):
     #TODO  : Validate file type 
+    folder_path= ("uploads")
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
         raise HTTPException(status_code=405, detail="items not found")
-    
+
+    if not os.path.exists(folder_path):
+         os.makedirs(folder_path)
+
     for i , file in enumerate(files) :  
         tmp = file.filename.split(".")
         file.filename = f"{id}_{i}.{tmp[1]}"
@@ -110,17 +114,19 @@ def get_Annonces_all( db : Session = Depends(get_db)):
     annonces = db.query(models.Annonce).all() 
     if ( annonces == None) :
         raise HTTPException(status_code=405, detail="items not found")
-    result=[]
-    for an in annonces : 
-        result.append({'title' : an.titre , 'prix':an.prix , 'wilaya' : an.wilaya , 'thumbnail':None})
     return annonces
 
 #Rechercher annonce par id  
 @app.get('/get_Annonce_byid' )
 def get_get_Annonce_byid( id : int , db : Session = Depends(get_db)): 
+
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
         raise HTTPException(status_code=405, detail="items not found")
+    user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
+    if(user==None):
+        raise HTTPException(status_code=404, detail="User not found")
+    annonce.utilisateur_id = user 
     return annonce
 
 

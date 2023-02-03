@@ -7,4 +7,5 @@ src/scraper.py
 src/RssScraper.py
 src/uploads
 src/view.json
+src/annonces_scraping_refs.json
 .vscode
