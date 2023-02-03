@@ -31,9 +31,6 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 
-
-
-
 #Crée Utilisateur
 
 @app.post('/create_user')

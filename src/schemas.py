@@ -13,7 +13,7 @@ class AnnonceBase(BaseModel):
     commune: str
     adresse: str
     photos: str
-    isScraped : bool
+    isScraped : bool = False
     class Config:
         orm_mode = True
 

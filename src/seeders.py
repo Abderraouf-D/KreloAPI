@@ -6,7 +6,7 @@ Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 
 
-
+#you have to put images test1 test2 test3 in .../uploads folder 
 def seedAnnonces(numberOfSeeds):
     for i in range(numberOfSeeds):
         annonce  = schemas.AnnonceBase(
@@ -20,7 +20,7 @@ def seedAnnonces(numberOfSeeds):
         adresse =  "test",
         prix = 700000 , 
         wilaya= 17 , 
-        photos= "1_0;1_1;1_2", 
+        photos= "test1;test2;test3", 
         isScraped=False 
         )
         annonceDB = models.Annonce(**annonce.dict())
