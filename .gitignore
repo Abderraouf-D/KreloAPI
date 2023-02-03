@@ -3,9 +3,6 @@ src/__pycache__/database.cpython-310.pyc
 src/__pycache__/main.cpython-310.pyc
 src/__pycache__/models.cpython-310.pyc
 src/__pycache__/schemas.cpython-310.pyc
-src/scraper.py
-src/RssScraper.py
 src/uploads
 src/view.json
-src/annonces_scraping_refs.json
 .vscode
