@@ -1,14 +1,10 @@
 import os
-from typing import Optional,List
-from fastapi import FastAPI,Response,status,Depends ,Path , HTTPException , UploadFile , File
-from fastapi.params import Body
-from pydantic import BaseModel
-from random import randrange
+from typing import Optional
+from fastapi import FastAPI,Depends , UploadFile , File
 from sqlalchemy.orm import Session 
 from sqlalchemy import or_ 
 import models,schemas
 from database import engine,get_db,Base
-import string
 from datetime import datetime
 import re 
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,7 +34,8 @@ def create_user(user:schemas.UtilisateurBase,db: Session=Depends(get_db)):
     #Check if the user exists or not
     new_user=db.query(models.Utilisateur).filter(models.Utilisateur.email==user.email).first()
     if(new_user):#User already exists
-        raise HTTPException(status_code=400, detail="Email already registered")
+        return {"error":"Email already registered"}
+       
     new_user=models.Utilisateur(**user.dict())
     db.add(new_user)
     db.commit()
@@ -51,7 +48,7 @@ def get_user(email:str,db: Session=Depends(get_db)):
     #Check if the user exists or no
     new_user=db.query(models.Utilisateur).filter(models.Utilisateur.email==email).first()
     if(new_user is None):#not found
-        raise HTTPException(status_code=404, detail="User not found")
+        return {"error": "items not found"}
     return new_user
 
 
@@ -62,7 +59,7 @@ async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_d
     #check if it exists or no
     user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
     if(user==None):#User doesn't exist
-        raise HTTPException(status_code=404, detail="User not found")
+        return {"error": "items not found"}
     new_annonce=models.Annonce(**annonce.dict())
     db.add(new_annonce)
     db.commit()
@@ -78,7 +75,7 @@ async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),
     folder_path= ("uploads")
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
-        raise HTTPException(status_code=405, detail="items not found")
+        return {"error": "items not found"}
 
     if not os.path.exists(folder_path):
          os.makedirs(folder_path)
@@ -99,11 +96,11 @@ async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),
 def get_mesAnnonces(id_utilisateur:int,db: Session=Depends(get_db)):
     user=db.query(models.Utilisateur).filter(models.Utilisateur.id==id_utilisateur).first()
     if(user==None):
-        raise HTTPException(status_code=404, detail="User not found")
+        return {"error":"User not found"}
     annonce=db.query(models.Annonce).filter(models.Annonce.utilisateur_id==id_utilisateur).all()
     
     if ( annonce == None) :
-        raise HTTPException(status_code=405, detail="items not found")
+        return {"error": "items not found"}
     return annonce
 
     
@@ -113,7 +110,7 @@ def get_mesAnnonces(id_utilisateur:int,db: Session=Depends(get_db)):
 def get_Annonces_all( db : Session = Depends(get_db)): 
     annonces = db.query(models.Annonce).all() 
     if ( annonces == None) :
-        raise HTTPException(status_code=405, detail="items not found")
+        return {"error": "items not found"}
     return annonces
 
 #Rechercher annonce par id  
@@ -122,10 +119,10 @@ def get_get_Annonce_byid( id : int , db : Session = Depends(get_db)):
 
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
-        raise HTTPException(status_code=405, detail="items not found")
+        return {"error": "items not found"}
     user=db.query(models.Utilisateur).filter(models.Utilisateur.id==annonce.utilisateur_id).first()
     if(user==None):
-        raise HTTPException(status_code=404, detail="User not found")
+        return {"error":"User not found"}
     annonce.utilisateur_id = user 
     return annonce
 
@@ -143,7 +140,7 @@ def get_Annonces_ByKeywords( keyWords  :str  , db : Session = Depends(get_db)):
     if  (len(result)> 0) : 
         return result 
     else :
-        raise HTTPException(status_code=405, detail="items not found")
+        return {"error": "items not found"}
 
 
     
@@ -156,7 +153,7 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
          db.delete(annonce)
          db.commit()
      else:
-         raise HTTPException(status_code=405, detail="items not found")
+         return {"error": "items not found"}
 
 
 
@@ -172,11 +169,11 @@ def filter_annonces(*,  type: Optional[int] =None,
  
     if ( dateMins is not None ) : 
         if (not re.match("^\d{4}-\d{2}-\d{2}$", dateMins) ) :
-            raise HTTPException(500 , "Please enter the date in the following form : yyyy-mm-dd")
+            return {"error":"Please enter the date in the following form : yyyy-mm-dd"}
         dateMin = datetime.strptime(dateMins,"%Y-%m-%d").date()
     if ( dateMaxs is not None ) : 
         if ( not re.match("^\d{4}-\d{2}-\d{2}$", dateMaxs) ) : 
-            raise HTTPException(500 , "Please enter the date in the following form : yyyy-mm-dd")
+            return {"error":"Please enter the date in the following form : yyyy-mm-dd"}
         dateMax = datetime.strptime(dateMaxs,"%Y-%m-%d").date()
    
     queryRes= None
@@ -196,7 +193,7 @@ def filter_annonces(*,  type: Optional[int] =None,
                 queryRes = db.query(models.Annonce).filter(getattr(models.Annonce, attr)==params[attr], dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
             
             if (queryRes == None or len(queryRes)==0) :  
-                raise HTTPException(status_code=406, detail="items not found")
+                return {"error": "items not found"}
                
             
             result.append(set(queryRes))     
@@ -209,7 +206,7 @@ def filter_annonces(*,  type: Optional[int] =None,
         for an in result : 
             filtered = filtered & an 
             if(len(filtered) == 0 ) :
-                raise HTTPException(status_code=405, detail="items not found")
+                return {"error": "items not found"}
     else : 
         if ( dateMin == None and dateMax ==  None) : 
             queryRes = None
@@ -220,7 +217,7 @@ def filter_annonces(*,  type: Optional[int] =None,
         else :  
                 queryRes = db.query(models.Annonce).filter(dateMax >= models.Annonce.datePub ,models.Annonce.datePub  >= dateMin).all()
         if (queryRes == None or len(queryRes)==0) : 
-            raise HTTPException(status_code=406, detail="items not found")
+            return {"error": "items not found"}
         filtered = set(queryRes)    
             
     return filtered
@@ -234,12 +231,12 @@ def get_message(id_utilisateur:int,db:Session=Depends(get_db)):
     annonce_table=get_mesAnnonces(id_utilisateur=id_utilisateur,db=db)#Pour recuperer tous les annonces 
     message=[]
     if(annonce_table==None or len(annonce_table)==0):
-         raise HTTPException(status_code=405, detail="items not found")
+         return {"error": "items not found"}
     for annonce in annonce_table:
         message.append(db.query(models.Messages).filter(models.Messages.annonce_id==annonce.id).all())
     if (len(message>0)) :    
         return message
-    else : raise HTTPException(status_code=406, detail="messages not found")
+    else : return {"error": "messages not found"}
 
 
 #Créer message a envoyer
