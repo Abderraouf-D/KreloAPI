@@ -226,23 +226,18 @@ def filter_annonces(*,  type: Optional[int] =None,
 
     
 #Récuperer messages recus 
-@app.get('/get_message')
-def get_message(id_utilisateur:int,db:Session=Depends(get_db)):
-    annonce_table=get_mesAnnonces(id_utilisateur=id_utilisateur,db=db)#Pour recuperer tous les annonces 
-    message=[]
-    if(annonce_table==None or len(annonce_table)==0):
-         return {"error": "items not found"}
-    for annonce in annonce_table:
-        message.append(db.query(models.Messages).filter(models.Messages.annonce_id==annonce.id).all())
-    if (len(message>0)) :    
-        return message
+@app.get('/get_messages_byAnnonce')
+def get_messages_byAnnonce(id_annonce:int,db:Session=Depends(get_db)):
+    messages = db.query(models.Messages).filter(models.Messages.annonce_id==id_annonce).all()
+    if (len(messages)>0) :    
+        return messages
     else : return {"error": "messages not found"}
 
 
 #Créer message a envoyer
 @app.post('/create_message')
 def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.MessageBase,db: Session=Depends(get_db)):
-    
+                    #sender's id
     new_message = models.Messages(**message.dict())
  
     new_message.annonce_id = id_annonce
