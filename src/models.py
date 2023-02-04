@@ -6,7 +6,7 @@ import datetime
 class Utilisateur(Base):
     __tablename__ = "Utilisateurs"
     id = Column(Integer, primary_key=True)
-    email = Column(String(30), unique=True, nullable=False)
+    email = Column(String(30),  nullable=False)
     is_admin = Column(Boolean, default=False)
     nom = Column(String(30), nullable=False)
     prenom = Column(String(30), nullable=False)

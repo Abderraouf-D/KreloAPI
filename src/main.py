@@ -8,7 +8,7 @@ from database import engine,get_db,Base
 from datetime import datetime
 import re 
 from fastapi.middleware.cors import CORSMiddleware
-
+import scraper
 app=FastAPI()
 
 
@@ -251,6 +251,18 @@ def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.Mes
 
 #Web scraping 
 
+app.get('/scraping')
+def scraping(db:Session=Depends(get_db))  :
+    try : 
+        annonces = scraper.scrapListings()
 
+        for an in annonces :
+            db.add(an)
+            db.commit()
+            db.refresh(an)
+    except Exception as e : 
+        return {"error" : e}
+
+    return {"succes":"OK"}
 
     
