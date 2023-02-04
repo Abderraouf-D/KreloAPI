@@ -131,8 +131,7 @@ def scrapListings():
             listings= addPageListings(soup)
           
             i += 1
-     
-              
+         
  # test
     return listings
 
