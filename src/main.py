@@ -229,7 +229,9 @@ def filter_annonces(*,  type: Optional[int] =None,
 @app.get('/get_messages_byAnnonce')
 def get_messages_byAnnonce(id_annonce:int,db:Session=Depends(get_db)):
     messages = db.query(models.Messages).filter(models.Messages.annonce_id==id_annonce).all()
-    if (len(messages)>0) :    
+    if (len(messages)>0) : 
+        for msg in messages : 
+            msg.utilisateur_id =db.query(models.Utilisateur).filter(models.Utilisateur.id==msg.utilisateur_id).first()
         return messages
     else : return {"error": "messages not found"}
 
