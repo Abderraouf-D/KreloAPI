@@ -25,7 +25,7 @@ def getData(url):
 def addPageListings(soup):
     folder_path = "uploads"
     listings = []
-
+    i=0
     #extract the table of listings 
     rows = soup.find_all('tr', class_='Tableau1')
     
@@ -63,7 +63,7 @@ def addPageListings(soup):
         try:
             fields = annonceDetails.find_all('td', class_='da_field_text')
             an = AnnonceBase(
-                utilisateur_id = -ref ,
+                utilisateur_id = 1 ,
                 titre = attr.text,
                 categorie = categories.index("Autre"),
                 type = types.index("Autre"),
@@ -73,7 +73,7 @@ def addPageListings(soup):
                 surface = nums_from_string.get_nums(fields[attribut.index('Surface')].text.replace(" ",''))[0],
                 prix = nums_from_string.get_nums(fields[attribut.index('Prix')].text.replace(" ",''))[0],
                 description = fields[attribut.index('Texte')].text + f"\n\n Tél:{annonceSoup.find('span',class_='da_contact_value').text}",
-                isScraped=False ,
+                isScraped=True ,
                 photos=""
             )
             
@@ -91,6 +91,8 @@ def addPageListings(soup):
             print (e)   
             
         else :
+            i+=1
+            print(i)
             refSet.append(ref)
             with open('annonces_scraping_refs.json', 'w') as file:
             # Write the set into the file
@@ -113,8 +115,9 @@ def addPageListings(soup):
 
 
             listings.append(an)
-            print(an)
-            exit()
+            
+            
+        
     
     return listings
 
@@ -122,7 +125,7 @@ def addPageListings(soup):
 # looping through pages and getting table content
 def scrapListings():
     i = 1
-    while i < 9:
+    while i < 2:
         
             url = f"http://www.annonce-algerie.com/AnnoncesImmobilier.asp?rech_cod_cat=1&rech_cod_rub=&rech_cod_typ=&rech_cod_sou_typ=&rech_cod_pay=DZ&rech_cod_reg=&rech_cod_vil=&rech_cod_loc=&rech_prix_min=&rech_prix_max=&rech_surf_min=&rech_surf_max=&rech_age=&rech_photo=&rech_typ_cli=&rech_order_by=31&rech_page_num={i}"
             soup = getData(url)
@@ -131,7 +134,7 @@ def scrapListings():
             listings= addPageListings(soup)
           
             i += 1
-         
+          
  # test
     return listings
 

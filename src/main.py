@@ -219,6 +219,7 @@ def filter_annonces(*,  type: Optional[int] =None,
         if (queryRes == None or len(queryRes)==0) : 
             return {"error": "items not found"}
         filtered = set(queryRes)    
+        
             
     return filtered
 
@@ -251,16 +252,17 @@ def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.Mes
 
 #Web scraping 
 
-app.get('/scraping')
+@app.get('/scraping')
 def scraping(db:Session=Depends(get_db))  :
     try : 
         annonces = scraper.scrapListings()
-
+        
         for an in annonces :
-            db.add(an)
+            anDB = models.Annonce(**an.dict())
+            db.add(anDB)
             db.commit()
-            db.refresh(an)
     except Exception as e : 
+        print(e)
         return {"error" : e}
 
     return {"succes":"OK"}
