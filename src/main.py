@@ -256,14 +256,14 @@ def create_message(id_utilisateur : int , id_annonce : int ,message :schemas.Mes
 def scraping(db:Session=Depends(get_db))  :
     try : 
         annonces = scraper.scrapListings()
-        
+
         for an in annonces :
             anDB = models.Annonce(**an.dict())
             db.add(anDB)
             db.commit()
     except Exception as e : 
         print(e)
-        return {"error" : e}
+        return {"error" : "Something went wrong"}
 
     return {"succes":"OK"}
 
