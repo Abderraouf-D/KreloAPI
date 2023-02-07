@@ -81,9 +81,10 @@ async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),
     #TODO  : Validate file type 
     folder_path= "uploads"
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
-    annonce.photos = ';'.join([f.filename for f in files])
     if ( annonce == None) :
         return {"error": "items not found"}
+    annonce.photos = ';'.join([f.filename for f in files])
+    
 
     if not os.path.exists(folder_path):
          os.makedirs(folder_path)
