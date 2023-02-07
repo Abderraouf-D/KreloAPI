@@ -8,6 +8,7 @@ from database import engine,get_db,Base
 from datetime import datetime
 import re 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import scraper
 app=FastAPI()
 
@@ -68,12 +69,19 @@ async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_d
 
 
 
+@app.get("/uploads/{path}")
+async def uploads(path :str ) : 
+     return FileResponse( os.path.join("uploads",path))
+
+
+
 #Uploader  les images d'une annonce by id
 @app.post('/upload_byid')
 async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),db: Session=Depends(get_db)):
     #TODO  : Validate file type 
-    folder_path= ("uploads")
+    folder_path= "uploads"
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
+    annonce.photos = ';'.join([f.filename for f in files])
     if ( annonce == None) :
         return {"error": "items not found"}
 
@@ -86,7 +94,7 @@ async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),
         file_path = os.path.join("uploads", file.filename)
         with open(file_path, "wb") as f:
             f.write(await file.read())
-    annonce.photos = ';'.join([f.filename for f in files])
+    
     db.commit()
 
     return {"succes" : True}

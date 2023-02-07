@@ -103,17 +103,18 @@ def addPageListings(soup):
             imgList =[]
             if not os.path.exists(folder_path):
                     os.makedirs(folder_path)
+            imagesDB=[]        
             for  i , img in enumerate(images) : 
+
                 fileUrl = "http://www.annonce-algerie.com" + str(img.get('src'))
+                imagesDB.append(fileUrl.split('/').pop())
                 response = requests.get(fileUrl)
                 file_path = os.path.join("uploads", fileUrl.split('/').pop())
                 with open(file_path, "wb") as f:
                     f.write(response.content)
                     imgList.append(file_path)
-            an.photos= ';'.join(imgList)  
-
-
-
+            an.photos= ';'.join(imagesDB) 
+            
             listings.append(an)
             
             
