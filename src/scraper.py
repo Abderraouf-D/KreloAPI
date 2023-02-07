@@ -67,7 +67,7 @@ def addPageListings(soup):
                 titre = attr.text,
                 categorie = categories.index("Autre"),
                 type = types.index("Autre"),
-                wilaya = wilayas.index(fields[attribut.index('Localisation')].find_all('a')[2].text),
+                wilaya = wilayas.index(fields[attribut.index('Localisation')].find_all('a')[2].text)+1,
                 commune = fields[attribut.index('Localisation')].find_all('a')[3].text,
                 adresse = fields[attribut.index('Adresse')].text,
                 surface = nums_from_string.get_nums(fields[attribut.index('Surface')].text.replace(" ",''))[0],
