@@ -178,7 +178,7 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
                 db.delete(msg)
          db.commit()       
          db.delete(annonce)
-         db.commit()
+         db.commit() 
      else:
          print("error annonce not found")
          return {"error": "items not found"}
