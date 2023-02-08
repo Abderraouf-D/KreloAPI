@@ -173,8 +173,9 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
      
      if(annonce!=None):
          messages = db.query(models.Messages).filter(models.Messages.annonce_id==annonce_id).all()
-         for msg in messages : 
-            db.delete(msg)
+         if messages != None  : 
+            for msg in messages : 
+                db.delete(msg)
          db.delete(annonce)
          db.commit()
      else:
