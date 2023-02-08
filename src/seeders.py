@@ -8,18 +8,41 @@ db = SessionLocal()
 
 
 def seedAll(nbUsers , anPerUser , msgPerListing):
+    user = schemas.UtilisateurBase(
+                    email = f"km_rezazi@esi.dz",
+                    prenom = 'Abdessamed Mohammed',
+                    nom = "Rezazi",
+                    tel='0705698004',
+                    adresse='This is an adress'
+                )
+    userDB = models.Utilisateur(**user.dict())
+    userDB.is_admin=True
+    db.add(userDB)
+    db.commit()
+    user = schemas.UtilisateurBase(
+                    email = f"ka_dandani@esi.dz",
+                    nom = 'Dandani',
+                    prenom = "Abderraouf",
+                    tel='0561806778',
+                    adresse='Babezzouar,Alger'
+                )
+    userDB = models.Utilisateur(**user.dict())
+    userDB.is_admin=True
+    db.add(userDB)
+    db.commit()
     for  u in range(nbUsers) : 
         #create user 
             try :
                 user = schemas.UtilisateurBase(
-                    is_admin=False , 
                     email = f"user{u}@gmail.com",
                     nom = f"nom {u}",
                     prenom = f"prenom {u}",
-                    tel='0'+str(u)*9,
+                    tel='0659856856',
                     adresse='This is an adress'
                 )
+
                 userDB = models.Utilisateur(**user.dict())
+              
                 db.add(userDB)
                 db.commit()
                 db.refresh(userDB)
@@ -29,8 +52,8 @@ def seedAll(nbUsers , anPerUser , msgPerListing):
                 for a in range(anPerUser) :
                     #create annonce
                     annonce  = schemas.AnnonceBase(
-                    utilisateur_id= 1  ,
-                    titre= "This is a titles"    ,
+                    utilisateur_id= addeduser  ,
+                    titre= "This is a title"    ,
                     description= "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum \nLorem ipsum Lorem ipsum ." ,
                     categorie= 1  , 
                     type= 1 , 
@@ -38,7 +61,7 @@ def seedAll(nbUsers , anPerUser , msgPerListing):
                     commune= "This is a city" ,
                     adresse =  "This is an adresse",
                     prix = 700000 , 
-                    wilaya= 17 , 
+                    wilaya= 18 , 
                     photos= "test1.jpeg;test2.jpeg;test3.jpeg", 
                     isScraped=False 
                     )
