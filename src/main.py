@@ -1,6 +1,6 @@
 import os
-from typing import Optional
-from fastapi import FastAPI,Depends , UploadFile , File
+from typing import Optional , List
+from fastapi import FastAPI,Depends , UploadFile , File 
 from sqlalchemy.orm import Session 
 from sqlalchemy import or_ 
 import models,schemas
@@ -73,8 +73,8 @@ async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_d
 async def uploads(path :str ) : 
     file = os.path.join("uploads",path) 
     try : 
-         
-        return FileResponse( os.path.join("uploads",path))  if os.path.exists(file) else  {"error" : "file not found"}
+      
+        return FileResponse( os.path.join("uploads",path))  if os.path.exists(file) and path else  {"error" : "file not found"}
       
     except :
          print("smth went wrong")
@@ -84,7 +84,7 @@ async def uploads(path :str ) :
 
 #Uploader  les images d'une annonce by id
 @app.post('/upload_byid')
-async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),db: Session=Depends(get_db)):
+async def upload_byid(id : int  , files : Optional[List[UploadFile]]=File (...),db: Session=Depends(get_db)):
     #TODO  : Validate file type 
     folder_path= "uploads"
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
@@ -171,6 +171,7 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
          db.delete(annonce)
          db.commit()
      else:
+         print("error annonce not found")
          return {"error": "items not found"}
 
 
