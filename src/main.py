@@ -90,7 +90,7 @@ async def upload_byid(id : int  , files : Optional[List[UploadFile]]=File (...),
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
     if ( annonce == None) :
         return {"error": "items not found"}
-    annonce.photos = ';'.join([f.filename for f in files])
+    
     
     try :
 
@@ -103,6 +103,7 @@ async def upload_byid(id : int  , files : Optional[List[UploadFile]]=File (...),
             file_path = os.path.join("uploads", file.filename)
             with open(file_path, "wb") as f:
                 f.write(await file.read())
+        annonce.photos = ';'.join([f.filename for f in files])        
     except : 
         return {"error" : "files not loaded"} 
     db.commit()
