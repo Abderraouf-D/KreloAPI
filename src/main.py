@@ -85,6 +85,8 @@ async def uploads(path :str ) :
 #Uploader  les images d'une annonce by id
 @app.post('/upload_byid')
 async def upload_byid(id : int  , files : Optional[List[UploadFile]]=File (...),db: Session=Depends(get_db)):
+    if  not files :
+        return {"error" : "no files received"}
     #TODO  : Validate file type 
     folder_path= "uploads"
     annonce = db.query(models.Annonce).filter(models.Annonce.id == id).first()
@@ -168,7 +170,11 @@ def get_Annonces_ByKeywords( keyWords  :str  , db : Session = Depends(get_db)):
 @app.delete('/delete_annonce/{annonce_id}')
 def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
      annonce=db.query(models.Annonce).filter(models.Annonce.id==annonce_id).first()
+     
      if(annonce!=None):
+         messages = db.query(models.Messages).filter(models.Messages.annonce_id==annonce_id).all()
+         for msg in messages : 
+            db.delete(msg)
          db.delete(annonce)
          db.commit()
      else:
