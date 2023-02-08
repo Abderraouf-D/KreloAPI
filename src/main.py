@@ -71,7 +71,14 @@ async def create_annonce(annonce : schemas.AnnonceBase,db: Session=Depends(get_d
 
 @app.get("/uploads/{path}")
 async def uploads(path :str ) : 
-     return FileResponse( os.path.join("uploads",path))
+    file = os.path.join("uploads",path) 
+    try : 
+         
+        return FileResponse( os.path.join("uploads",path))  if os.path.exists(file) else  {"error" : "file not found"}
+      
+    except :
+         print("smth went wrong")
+         return {"error" : "file not found balak"}
 
 
 
@@ -85,17 +92,19 @@ async def upload_byid(id : int  , files : Optional[list[UploadFile]]=File (...),
         return {"error": "items not found"}
     annonce.photos = ';'.join([f.filename for f in files])
     
+    try :
 
-    if not os.path.exists(folder_path):
-         os.makedirs(folder_path)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
 
-    for i , file in enumerate(files) :  
-        tmp = file.filename.split(".")
-        file.filename = f"{id}_{i}.{tmp[1]}"
-        file_path = os.path.join("uploads", file.filename)
-        with open(file_path, "wb") as f:
-            f.write(await file.read())
-    
+        for i , file in enumerate(files) :  
+            tmp = file.filename.split(".")
+            file.filename = f"{id}_{i}.{tmp[1]}"
+            file_path = os.path.join("uploads", file.filename)
+            with open(file_path, "wb") as f:
+                f.write(await file.read())
+    except : 
+        return {"error" : "files not loaded"} 
     db.commit()
 
     return {"succes" : True}
