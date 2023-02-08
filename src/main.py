@@ -176,6 +176,7 @@ def delete_annonce(annonce_id : int   , db : Session =Depends(get_db)) :
          if messages != None  : 
             for msg in messages : 
                 db.delete(msg)
+         db.commit()       
          db.delete(annonce)
          db.commit()
      else:
