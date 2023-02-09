@@ -25,7 +25,7 @@ def getData(url):
 def addPageListings(soup):
     folder_path = "uploads"
     listings = []
-    i=0
+    j=0
     #extract the table of listings 
     rows = soup.find_all('tr', class_='Tableau1')
     
@@ -91,8 +91,8 @@ def addPageListings(soup):
             print (e)   
             
         else :
-            i+=1
-            print(i)
+            j+=1
+            print(j)
             refSet.append(ref)
             with open('annonces_scraping_refs.json', 'w') as file:
             # Write the set into the file

@@ -33,7 +33,7 @@ CREATE TABLE `Messages` (
   KEY `utilisateur_id` (`utilisateur_id`),
   CONSTRAINT `Messages_ibfk_1` FOREIGN KEY (`annonce_id`) REFERENCES `Annonces` (`id`),
   CONSTRAINT `Messages_ibfk_2` FOREIGN KEY (`utilisateur_id`) REFERENCES `Utilisateurs` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `Messages` (
 
 LOCK TABLES `Messages` WRITE;
 /*!40000 ALTER TABLE `Messages` DISABLE KEYS */;
-INSERT INTO `Messages` VALUES (2,4,2,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(3,4,2,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(4,5,2,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(5,5,2,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(6,6,3,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(7,6,3,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(8,7,3,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(9,7,3,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(10,8,4,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(11,8,4,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(12,9,4,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(13,9,4,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(14,10,5,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(15,10,5,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(16,11,5,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04'),(17,11,5,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-04');
+INSERT INTO `Messages` VALUES (1,3,6,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(2,3,6,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(3,4,6,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(4,4,6,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(5,5,7,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(6,5,7,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(7,6,7,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(8,6,7,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(9,7,8,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(10,7,8,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(11,8,8,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(12,8,8,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(13,9,9,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(14,9,9,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(15,10,9,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09'),(16,10,9,'Hello I want this item !\ntesttesttesttesttesttesttesttesttesttesttesttesttesttesttest','2023-02-09');
 /*!40000 ALTER TABLE `Messages` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-04 23:52:54
+-- Dump completed on 2023-02-09  1:05:12

@@ -31,7 +31,7 @@ CREATE TABLE `Utilisateurs` (
   `tel` varchar(30) NOT NULL,
   `adresse` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `Utilisateurs` (
 
 LOCK TABLES `Utilisateurs` WRITE;
 /*!40000 ALTER TABLE `Utilisateurs` DISABLE KEYS */;
-INSERT INTO `Utilisateurs` VALUES (1,'user1@gmail.com',0,'nom 1','prenom 1','0111111111','This is an adress'),(2,'user0@gmail.com',0,'nom 0','prenom 0','0000000000','This is an adress'),(3,'user1@gmail.com',0,'nom 1','prenom 1','0111111111','This is an adress'),(4,'user2@gmail.com',0,'nom 2','prenom 2','0222222222','This is an adress'),(5,'user3@gmail.com',0,'nom 3','prenom 3','0333333333','This is an adress'),(6,'user4@gmail.com',0,'nom 4','prenom 4','0444444444','This is an adress');
+INSERT INTO `Utilisateurs` VALUES (1,'s_batata@esi.dz',1,'Batata','Sofiane','0777777777','This is an adress'),(2,'s_laoudi@esi.dz',1,'Laoudi','Soraya','0777777777','This is an adress'),(3,'l_yessad@esi.dz',1,'Yessad','Lamia','0777777777','This is an adress'),(4,'km_rezazi@esi.dz',1,'Rezazi','Abdessamed Mohammed','0705698004','This is an adress'),(5,'ka_dandani@esi.dz',1,'Dandani','Abderraouf','0561806778','Babezzouar,Alger'),(6,'user0@gmail.com',0,'nom 0','prenom 0','0659856856','This is an adress'),(7,'user1@gmail.com',0,'nom 1','prenom 1','0659856856','This is an adress'),(8,'user2@gmail.com',0,'nom 2','prenom 2','0659856856','This is an adress'),(9,'user3@gmail.com',0,'nom 3','prenom 3','0659856856','This is an adress'),(10,'user4@gmail.com',0,'nom 4','prenom 4','0659856856','This is an adress');
 /*!40000 ALTER TABLE `Utilisateurs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-04 23:52:54
+-- Dump completed on 2023-02-09  1:05:12

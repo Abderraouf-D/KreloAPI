@@ -9,6 +9,39 @@ db = SessionLocal()
 
 def seedAll(nbUsers , anPerUser , msgPerListing):
     user = schemas.UtilisateurBase(
+                    email = f"s_batata@esi.dz",
+                    prenom = 'Sofiane',
+                    nom = "Batata",
+                    tel='0777777777',
+                    adresse='This is an adress'
+                )
+    userDB = models.Utilisateur(**user.dict())
+    userDB.is_admin=True
+    db.add(userDB)
+    db.commit()
+    user = schemas.UtilisateurBase(
+                    email = f"s_laoudi@esi.dz",
+                    prenom = 'Soraya',
+                    nom = "Laoudi",
+                    tel='0777777777',
+                    adresse='This is an adress'
+                )
+    userDB = models.Utilisateur(**user.dict())
+    userDB.is_admin=True
+    db.add(userDB)
+    db.commit()
+    user = schemas.UtilisateurBase(
+                    email = f"l_yessad@esi.dz",
+                    prenom = 'Lamia',
+                    nom = "Yessad",
+                    tel='0777777777',
+                    adresse='This is an adress'
+                )
+    userDB = models.Utilisateur(**user.dict())
+    userDB.is_admin=True
+    db.add(userDB)
+    db.commit()
+    user = schemas.UtilisateurBase(
                     email = f"km_rezazi@esi.dz",
                     prenom = 'Abdessamed Mohammed',
                     nom = "Rezazi",
